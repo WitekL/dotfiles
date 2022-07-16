@@ -20,8 +20,11 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'yssl/QFEnter'
 Plug 'kamykn/spelunker.vim'
 Plug 'godlygeek/tabular'
+"
+" Git stuff
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
+"
 Plug 'scrooloose/nerdtree'
 Plug 'jremmen/vim-ripgrep'
 Plug 'tpope/vim-haml'
@@ -34,8 +37,11 @@ Plug 'tpope/vim-endwise'
 Plug 'tsaleh/vim-align'
 Plug 'tsaleh/vim-tmux'
 Plug 'bronson/vim-trailing-whitespace'
-Plug 'ctrlpvim/ctrlp.vim'
+" Plug 'ctrlpvim/ctrlp.vim'
+Plug '/usr/local/opt/fzf'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 " Plug 'ervandew/supertab'
+"
 " Colorscheme settings
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'NLKNguyen/papercolor-theme', { 'as': 'papercolor-theme' }
@@ -47,30 +53,38 @@ Plug 'w0rp/ale'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'rizzatti/dash.vim'
 Plug 'itchyny/lightline.vim'
+"
 " Rails plugins
 Plug 'tpope/vim-rails'
+"
 " JS plugins
 Plug 'pangloss/vim-javascript'
 Plug 'isRuslan/vim-es6'
 Plug 'posva/vim-vue'
+"
 " Golang plugins
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 
 " Colorscheme settings
 let g:dracula_italic = 0
-colorscheme dracula
-" colorscheme papercolor
+" colorscheme dracula
+colorscheme papercolor
+set background=light
 " colorscheme one
 
 
+" :command Note :tabnew :e ~/Notes/newnote :lcd %:p:h
+" :command -bar Note :! touch ~/Notes/newnote | :tabnew | :e ~/Notes/newnote | :! rm ~/Notes/newnote
+:command -bar NoteBrowse :tabnew | :NERDTree ~/Notes
+:command Notes NoteBrowse
+" :command NoteP
+" :command NotesSave
 
 " let g:indent_guides_auto_colors=0
 " au VimEnter,Colorscheme * hi! IndentGuidesOdd  ctermfg=7 ctermbg=0
 " au VimEnter,Colorscheme * hi! IndentGuidesEven ctermfg=8 ctermbg=4
 
-nnoremap <C-n> :NERDTreeToggle<CR>
-nnoremap <C-p> :CtrlP<CR>
 
 set textwidth=120
 set colorcolumn=+1
@@ -82,11 +96,16 @@ let mapleader = "\<space>"
 
 nnoremap <leader><leader> <c-^>
 
+nnoremap <C-n> :NERDTreeToggle<CR>
+nmap <leader><C-n> :NERDTreeFind<CR>
+nnoremap <C-p> :<C-u>FZF<CR>
+
 nnoremap <leader>gt :tabnew<CR>
 nnoremap <leader>dt :windo bd<CR>
 " nnoremap <leader>dt :tabclose<CR>
 nnoremap <leader>o o<Esc>
 nnoremap <leader>O O<Esc>
+nnoremap <leader><C-g> :let @+=expand('%')<CR>
 
 set undofile
 set undodir=~/.vim/undodir
@@ -108,13 +127,13 @@ inoremap [, [<CR>]<C-c>O
 " Use ripgrep for search
 if executable('rg')
   set grepprg=rg\ --color=never
-  let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
-  let g:ctrlp_use_caching = 0
+  " let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+  " let g:ctrlp_use_caching = 0
 endif
 
-let g:ctrlp_lazy_update = 1
-let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-let g:ctrlp_custom_ignore = 'tags\|node_modules\|DS_Store\|git'
+" let g:ctrlp_lazy_update = 1
+" let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+" let g:ctrlp_custom_ignore = 'tags\|node_modules\|DS_Store\|git'
 
 set wildignore+=*/.git/*,*/tmp/*,*.swp
 
@@ -139,3 +158,18 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 let g:coc_global_extensions = ['coc-solargraph']
+
+" COC config
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
