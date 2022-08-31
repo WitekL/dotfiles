@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>witek.selfcontrol.automation.plist</string>
+    <key>Program</key>
+    <string>/Users/witek/.asdf/shims/ruby</string>
+    <key>ProgramArguments</key>
+     <array>
+     	<string>/Users/witek/.asdf/shims/ruby</string>
+      <string>/Users/witek/.scripts/selfcontrol_automation.rb</string>
+      </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+      <key>Hour</key>
+      <integer>12</integer>
+      <key>Minute</key>
+      <integer>14</integer>
+    </dict>
+  </dict>
+</plist>
