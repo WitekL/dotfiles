@@ -9,6 +9,7 @@ set hlsearch
 set ignorecase
 set smartcase
 set laststatus=2
+set relativenumber
 
 set expandtab
 set tabstop=2
@@ -20,6 +21,10 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'yssl/QFEnter'
 Plug 'kamykn/spelunker.vim'
 Plug 'godlygeek/tabular'
+"
+" Ruby block textobjects
+Plug 'kana/vim-textobj-user'
+Plug 'rhysd/vim-textobj-ruby'
 "
 " Git stuff
 Plug 'tpope/vim-fugitive'
@@ -38,14 +43,15 @@ Plug 'tsaleh/vim-align'
 Plug 'tsaleh/vim-tmux'
 Plug 'bronson/vim-trailing-whitespace'
 " Plug 'ctrlpvim/ctrlp.vim'
-Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 " Plug 'ervandew/supertab'
 "
 " Colorscheme settings
-Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'NLKNguyen/papercolor-theme', { 'as': 'papercolor-theme' }
-Plug 'rakr/vim-one', { 'as': 'one' }
+" Plug 'dracula/vim', { 'as': 'dracula' }
+" Plug 'NLKNguyen/papercolor-theme', { 'as': 'papercolor-theme' }
+" Plug 'rakr/vim-one', { 'as': 'one' }
+Plug 'sainnhe/everforest'
 "
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-dispatch'
@@ -66,12 +72,20 @@ Plug 'posva/vim-vue'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 
-" Colorscheme settings
-let g:dracula_italic = 0
-" colorscheme dracula
-colorscheme papercolor
-set background=light
-" colorscheme one
+syntax on
+" Important!!
+if has('termguicolors')
+  set termguicolors
+endif
+" For dark version.
+set background=dark
+" Set contrast.
+" This configuration option should be placed before `colorscheme everforest`.
+" Available values: 'hard', 'medium'(default), 'soft'
+let g:everforest_background = 'soft'
+" For better performance
+let g:everforest_better_performance = 1
+colorscheme everforest
 
 
 " :command Note :tabnew :e ~/Notes/newnote :lcd %:p:h
@@ -89,6 +103,7 @@ set background=light
 set textwidth=120
 set colorcolumn=+1
 let g:NERDTreeWinSize=40
+let NERDTreeShowHidden=1
 
 autocmd BufEnter * :syntax sync fromstart
 
@@ -110,11 +125,6 @@ nnoremap <leader><C-g> :let @+=expand('%')<CR>
 set undofile
 set undodir=~/.vim/undodir
 
-
-" Syntastic settings
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
 
 " Auto-expanding
 inoremap (; (<CR>)<C-c>O
@@ -146,6 +156,7 @@ let g:ale_fixers = {
 
 let g:ale_fix_on_save = 0
 let g:ale_set_highlights = 0
+let g:ale_virtualtext_cursor = 'current'
 
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
@@ -173,3 +184,21 @@ function! s:show_documentation()
     call feedkeys('K', 'in')
   endif
 endfunction
+
+" Toggle relative line number
+nmap <leader>l :set invrelativenumber<CR>
+
+" Ruby blocks text object nav
+" nnoremap <silent> <buffer> [r :<C-U>call <SID>searchsyn('\<do\>','rubyControl','r','n')<CR>
+" nnoremap <silent> <buffer> ]r :<C-U>call <SID>searchsyn('\<do\>','rubyControl','','n')<CR>
+" nnoremap <silent> <buffer> [R :<C-U>call <SID>searchsyn('\<end\>','rubyControl','r','n')<CR>
+" nnoremap <silent> <buffer> ]R :<C-U>call <SID>searchsyn('\<end\>','rubyControl','','n')<CR>
+" xnoremap <silent> <buffer> [r :<C-U>call <SID>searchsyn('\<do\>','rubyControl','r','v')<CR>
+" xnoremap <silent> <buffer> ]r :<C-U>call <SID>searchsyn('\<do\>','rubyControl','','v')<CR>
+" xnoremap <silent> <buffer> [R :<C-U>call <SID>searchsyn('\<end\>','rubyControl','r','v')<CR>
+" xnoremap <silent> <buffer> ]R :<C-U>call <SID>searchsyn('\<end\>','rubyControl','','v')<CR>
+
+" onoremap <silent> <buffer> ir :<C-U>call <SID>wrap_i('[r',']R')<CR>
+" onoremap <silent> <buffer> ar :<C-U>call <SID>wrap_a('[r',']R')<CR>
+" xnoremap <silent> <buffer> ir :<C-U>call <SID>wrap_i('[r',']R')<CR>
+" xnoremap <silent> <buffer> ar :<C-U>call <SID>wrap_a('[r',']R')<CR>
